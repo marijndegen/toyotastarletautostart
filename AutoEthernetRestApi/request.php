@@ -20,4 +20,4 @@ var_dump($result);
 
 */
 
-file_get_contents("http://192.168.1.177/cccstr");
+file_get_contents("http://192.168.1.177/ccc/someCoolGetURL");
