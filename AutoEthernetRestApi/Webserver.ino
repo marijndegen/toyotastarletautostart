@@ -6,17 +6,25 @@ IPAddress ip(192,168,1,177); // 192.168.1.177
 EthernetServer server(80);
 EthernetClient client;
 
+/*
+ * Setup the server
+ */
 void Webserver_setup(){
   Ethernet.begin(mac, ip);
   Serial.begin(9600);
   server.begin();
 }
 
+/*
+ * Run the serve function
+ */
 void Webserver_loop(){
   Webserver_serve();
-  
 }
 
+/*
+ * Serve the incomming client requests
+ */
 void Webserver_serve(){
   client = server.available();
   
@@ -31,8 +39,7 @@ void Webserver_serve(){
         request += c;
 
         if (c == '\n' && currentLineIsBlank) {
-          //Serial.println(getEndpoint(request));
-          endpointHandler(getEndpoint(request));
+          Webserver_endpointHandler(HTTP_getEndpoint(request));
           break;
         }
         
@@ -49,31 +56,43 @@ void Webserver_serve(){
   }
 }
 
-void endpointHandler(String endpoint){
+/*
+ * Once the endpoint is clear, anticipate based on the endpoint.
+ */
+void Webserver_endpointHandler(String endpoint){
   Serial.println(endpoint);
   
   if(endpoint == "/helloworld"){
-    sendHelloWorldResponse();
+    Webserver_sendHelloWorldResponse();
     return;
   }
 
   if(endpoint == "/byeworld"){
-    sendByeWorldResponse();
+    Webserver_sendByeWorldResponse();
     return;
   }
 
   HTTP_sendResponse("Woops, we couldn't find that!");
 }
 
-void sendHelloWorldResponse(){
+/*
+ * Some test response
+ */
+void Webserver_sendHelloWorldResponse(){
   HTTP_sendResponse("Hello world!");
 }
 
-void sendByeWorldResponse(){
+/*
+ * Some test response
+ */
+void Webserver_sendByeWorldResponse(){
   HTTP_sendResponse("Bye world!");
 }
 
-String getEndpoint(String request){
+/*
+ * Fetch the endpoint based on the request.
+ */
+String HTTP_getEndpoint(String request){
   String endPointString = "";
 
   bool isSkimming = true;
@@ -126,14 +145,13 @@ String getEndpoint(String request){
   return endPointString;
 }
 
+/*
+ * Send the response
+ */
 void HTTP_sendResponse(String response){
   client.println("HTTP/1.1 200 OK");
   client.println("Content-Type: text/plain");
   client.println("Connection: close");
   client.println();
   client.println(response);
-//  client.println("<!DOCTYPE HTML>");
-//  client.println("<html>");
-//  client.println("Hello world!");
-//  client.println("</html>");
 }
