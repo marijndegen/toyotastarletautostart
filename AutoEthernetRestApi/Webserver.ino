@@ -22,54 +22,17 @@ void Webserver_serve(){
   
   if (client) {
     boolean currentLineIsBlank = true;
-
     String request = "";
-
-//    bool isCounting = false;
-//    int fetchNumber = 3;
-//    String chars = "";
-//    
-//    const int idLength = 3;    
-//    char skimming [idLength] = {'*', '*', '*'}; 
-
     Serial.println("New request");
     
     while (client.connected()) {
       if (client.available()) {        
         char c = client.read();
         request += c;
-        
-        //Trying to fetch the endpoint.
-//        if(isCounting){
-//          chars += c;
-//          fetchNumber--;
-//          if(fetchNumber == 0){
-//            isCounting = false;
-//          }
-//        }
-//        
-//        skimming[0] = skimming[1];
-//        skimming[1] = skimming[2];
-//        skimming[2] = c;
-//
-//        bool skimmingCool = true;
-//        if(skimming[0] == 'c' && skimming[1] == 'c' && skimming[2] == 'c'){
-//          isCounting = true;
-//          Serial.println("hallo");
-//        }
-
-        //breaking out of the loop and sending the request.
-//        if (c == '\n' && currentLineIsBlank) {
-//          Serial.println("answer is: ");
-//          Serial.println(chars);
-//          HTTP_sendResponse();
-//          break;
-//        }
 
         if (c == '\n' && currentLineIsBlank) {
-          Serial.println(getEndpoint(request));
-          Serial.println(request);
-          HTTP_sendResponse();
+          //Serial.println(getEndpoint(request));
+          endpointHandler(getEndpoint(request));
           break;
         }
         
@@ -83,61 +46,94 @@ void Webserver_serve(){
     }
     delay(1);
     client.stop();
-    //Serial.println("client disonnected");
   }
+}
+
+void endpointHandler(String endpoint){
+  Serial.println(endpoint);
+  
+  if(endpoint == "/helloworld"){
+    sendHelloWorldResponse();
+    return;
+  }
+
+  if(endpoint == "/byeworld"){
+    sendByeWorldResponse();
+    return;
+  }
+
+  HTTP_sendResponse("Woops, we couldn't find that!");
+}
+
+void sendHelloWorldResponse(){
+  HTTP_sendResponse("Hello world!");
+}
+
+void sendByeWorldResponse(){
+  HTTP_sendResponse("Bye world!");
 }
 
 String getEndpoint(String request){
-  int stringLength = request.length();
-
-  String skimmedString = "";
+  String endPointString = "";
 
   bool isSkimming = true;
   bool isCounting = false;
-  String chars = "";
-  
-  const int idLength = 3;    
-  char skimming [idLength] = {'*', '*', '*'}; 
 
-  for(int i = 0; i < stringLength; i++){
+  const String identifier = "endpoint";
+  const int identifierLength = identifier.length();
+  char toSkim[identifierLength];
+  for(int i = 0; i < identifierLength ; i++){
+    toSkim[i] = identifier[i];
+  }
+  char compareableSkim [identifierLength];
+
+  //Iterate through the request.
+  for(int i = 0; i < request.length(); i++){
     char c = request[i];
 
+    //If the identifier was found, start registering the endpointString.
     if(isCounting){
       if(c != ' '){
-        skimmedString += c;  
+        endPointString  += c;  
       }else{
         isCounting = false;
         isSkimming = false;
-        Serial.println("String : " + skimmedString);
+        break;
       }
     }
 
+    //Register the string.
     if(isSkimming){
-      skimming[0] = skimming[1];
-      skimming[1] = skimming[2];
-      skimming[2] = c;
+      for(int i = 0; i < identifierLength; i++){
+        if(i == identifierLength - 1){
+          compareableSkim[i] = c;
+        }else{
+          compareableSkim[i] = compareableSkim[i + 1];  
+        }
+      }
     }
-    
-    if(skimming[0] == 'c' && skimming[1] == 'c' && skimming[2] == 'c'){
-      isCounting = true;
-      Serial.println("hallo");
+
+    //Check if the registered string is possibly the endpoint string.
+    for(int i = 0; i < identifierLength; i++){
+      if(toSkim[i] != compareableSkim[i]){
+        break;
+      }else if(i == (identifierLength - 1)){
+        isCounting = true;
+      }
     }
   }
   
-  return String(stringLength);
+  return endPointString;
 }
 
-void HTTP_sendResponse(){
+void HTTP_sendResponse(String response){
   client.println("HTTP/1.1 200 OK");
-  client.println("Content-Type: text/html");
+  client.println("Content-Type: text/plain");
   client.println("Connection: close");
   client.println();
-  client.println("<!DOCTYPE HTML>");
-  client.println("<html>");
-  client.println("Hello world!");
-  client.println("</html>");
-}
-
-String HTTP_getEndpoint(String request){
-  
+  client.println(response);
+//  client.println("<!DOCTYPE HTML>");
+//  client.println("<html>");
+//  client.println("Hello world!");
+//  client.println("</html>");
 }

@@ -20,4 +20,4 @@ var_dump($result);
 
 */
 
-file_get_contents("http://192.168.1.177/ccc/someCoolGetURL");
+echo file_get_contents("http://192.168.1.177/endpoint/byeworld1");
