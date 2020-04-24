@@ -30,6 +30,7 @@ void SoftwareSerial_setup() {
 }
 
 void SoftwareSerial_loop() {
+  
   //Write the command to the arduino serial line and reset the state
   if(!SoftwareSerial_commandRed){
     Serial.print("Now doing: ");
@@ -38,7 +39,8 @@ void SoftwareSerial_loop() {
     SoftwareSerial_commandRed = true;
     SoftwareSerial_command[0] = 0;
   }
-  
+
+  //Register incomming chars and maintain the timer
   while (softwareSerial.available()) {
     timer = millis();
     timerStarted = true;
@@ -47,9 +49,9 @@ void SoftwareSerial_loop() {
     SoftwareSerial_output[charIndex] = c;
     SoftwareSerial_output[charIndex + 1] = 0;
     charIndex++;
-    Serial.println(SoftwareSerial_output);
   }
 
+  //When the timer has passed, send the status response.
   if(millis() - timer > 500 && timerStarted){
     charIndex = 0;
     Serial.println(SoftwareSerial_output);
@@ -66,31 +68,12 @@ void SoftwareSerial_executeCommand(char commandToExecute[]){
   SoftwareSerial_commandRed = false;
 }
 
-//String SoftwareSerial_readOutput(){
-//  String output_copy = SoftwareSerial_output;
-//  SoftwareSerial_output[0] = 0;
-//  SoftwareSerial_outputRed = true;
-//  return output_copy;
-//}
-
 void SoftwareSerial_new_command(String command){
   
 }
 
-//void SoftwareSerial_reset_state(){
-//  SoftwareSerial_command[0] = 0;
-//  SoftwareSerial_output[0] = 0;
-//
-//  SoftwareSerial_commandRed = true;
-//  SoftwareSerial_outputRed = true;
-//}
-
 /*
- * Public methods
- */
-
-/*
- * Setters
+ * public Setters
  */
 void SoftwareSerial_command_startContact() {
   SoftwareSerial_executeCommand(SoftwareSerial_startContact);
@@ -110,13 +93,3 @@ void SoftwareSerial_command_startIgnition(int ignitionTime) {
 void SoftwareSerial_command_status() {
   SoftwareSerial_executeCommand(SoftwareSerial_status);
 }
-
-/*
- * Getters
- */
-//int SoftwareSerial_fetch_status() {
-//  charIndex = 0;
-//  int i;
-//  sscanf(SoftwareSerial_output, "%d", &i);
-//  return i;
-//}

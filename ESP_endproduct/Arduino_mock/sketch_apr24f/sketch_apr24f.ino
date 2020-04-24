@@ -30,10 +30,10 @@ void loop(){
     if(readString == "status/"){
       Serial.println(readString);
       
-      int aRandomNumber = random(0, 1000);
+      //int aRandomNumber = random(0, 1000);
     
       char numberOfSecondsOn[13];
-      sprintf(numberOfSecondsOn, "%d", aRandomNumber);
+      sprintf(numberOfSecondsOn, "%d", /*aRandomNumber*/ 1 );
       
       ArduinoUno.write(numberOfSecondsOn);
     }

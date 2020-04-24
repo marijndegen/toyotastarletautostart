@@ -4,7 +4,7 @@
 
 #ifndef APSSID
 #define APSSID "ToyotaStarlet"
-#define APPSK  "u09f8202fi2h390uh209f3u8h"
+#define APPSK  "asdfasdf"
 #endif
 
 /* These are the credentials of the AP */
@@ -41,7 +41,7 @@ void WifiWeb_loop() {
 void WifiWeb_startContact() {
   Serial.println("startContact NOW!!");
   SoftwareSerial_command_startContact();
-  server.send(200, "text/html", "<h1>start contact</h1>");
+  server.send(200, "text/html", "");
 }
 
 /* 
@@ -50,7 +50,7 @@ void WifiWeb_startContact() {
 */
 void WifiWeb_stopContact() {
   SoftwareSerial_command_stopContact();
-  server.send(200, "text/html", "<h1>stop contact</h1>");
+  server.send(200, "text/html", "");
 }
 
 /* 
@@ -65,7 +65,7 @@ void WifiWeb_startIgnition() {
   if(message == ""){
     server.send(400, "text/html", "<h1>couldn't connect</h1>");
   }else{
-    server.send(200, "text/html", "<h1>starting with " + message + "</h1>");
+    server.send(200, "text/html", "");
   }
 }
 
@@ -78,5 +78,5 @@ void WifiWeb_status() {
 }
 
 void WifiWeb_sendStatus(int statusIndicator){
-  server.send(200, "text/html", "<h1>" + String(statusIndicator) + "</h1>");
+  server.send(200, "text/html", String(statusIndicator));
 }
