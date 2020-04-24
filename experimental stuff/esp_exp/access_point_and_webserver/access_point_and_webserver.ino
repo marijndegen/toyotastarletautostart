@@ -53,15 +53,21 @@ void WifiModule_startContact() {
  *   http://192.168.4.1/car/stop/contact/
 */
 void WifiModule_stopContact() {
-  server.send(200, "text/html", "<h1>You are connected</h1>");
+  server.send(200, "text/html", "<h1>stop contact</h1>");
 }
 
 /* 
  *  Sends a message to the arduino controller that the ignition relai needs to be turned on for a specific time.
- *   http://192.168.4.1/car/start/ignition/{ignition_time}
+ *   http://192.168.4.1/car/start/ignition?ignitionTime=1000
 */
 void WifiModule_startIgnition() {
-  server.send(200, "text/html", "<h1>You are connected</h1>");
+  String message = "";
+  message += server.arg("ignitionTime");
+  if(message == ""){
+    server.send(400, "text/html", "<h1>couldn't connect</h1>");
+  }else{
+    server.send(200, "text/html", "<h1>" + message + "</h1>");
+  }
 }
 
 /* 
@@ -69,7 +75,7 @@ void WifiModule_startIgnition() {
  *   http://192.168.4.1/car/status/
 */
 void WifiModule_status() {
-  server.send(200, "text/html", "<h1>You are connected</h1>");
+  server.send(200, "text/html", "<h1>status 2000 ms</h1>");
 }
 
 void setup() {
@@ -86,8 +92,8 @@ void setup() {
   
   server.on("/car/start/contact", WifiModule_startContact);
   server.on("/car/stop/contact", WifiModule_stopContact);
-  server.on("/car/start/ignition/1000", WifiModule_startIgnition); //todo look for parameters
-  server.on("/car/status/", WifiModule_status);
+  server.on("/car/start/ignition", WifiModule_startIgnition); //todo look for parameters
+  server.on("/car/status", WifiModule_status);
   
   server.begin();
   Serial.println("HTTP server started");
