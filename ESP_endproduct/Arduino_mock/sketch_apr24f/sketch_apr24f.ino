@@ -17,7 +17,7 @@ void loop(){
    readString += c;
   }
 
-  if (readString.length() >0) {
+  if (readString.length() > 0) {
     if(readString == "start/"){
       Serial.println(readString);
     }

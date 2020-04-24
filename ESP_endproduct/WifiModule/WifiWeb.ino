@@ -74,6 +74,7 @@ void WifiWeb_startIgnition() {
  *   http://192.168.4.1:46969/car/status
 */
 void WifiWeb_status() {
+  Serial.println("hallo");
   SoftwareSerial_command_status();
 }
 
