@@ -12,14 +12,18 @@ const byte SoftwareSerial_maxCommandLength = 13;
 char SoftwareSerial_command[SoftwareSerial_maxCommandLength];
 char SoftwareSerial_output[SoftwareSerial_maxCommandLength];
 
+bool SoftwareSerial_commandRed = true;
+bool SoftwareSerial_outputRed = true;
+
 char SoftwareSerial_startContact[] = "start/"; 
 char SoftwareSerial_stopContact[] = "stop/"; 
-
 char SoftwareSerial_startIgnition[] = "ignition/"; 
 char SoftwareSerial_status[] = "status/"; 
 
-bool SoftwareSerial_commandRed = true;
-bool SoftwareSerial_outputRed = true;
+int charIndex = 0;
+
+unsigned long timer;
+bool timerStarted = false;
 
 void SoftwareSerial_setup() {
   softwareSerial.begin(19200);
@@ -34,6 +38,27 @@ void SoftwareSerial_loop() {
     SoftwareSerial_commandRed = true;
     SoftwareSerial_command[0] = 0;
   }
+  
+  while (softwareSerial.available()) {
+    timer = millis();
+    timerStarted = true;
+    
+    char c = softwareSerial.read();
+    SoftwareSerial_output[charIndex] = c;
+    SoftwareSerial_output[charIndex + 1] = 0;
+    charIndex++;
+    Serial.println(SoftwareSerial_output);
+  }
+
+  if(millis() - timer > 500 && timerStarted){
+    charIndex = 0;
+    Serial.println(SoftwareSerial_output);
+    timerStarted = false;
+    WifiWeb_sendStatus(atoi(SoftwareSerial_output));
+    for(int i = 0; i <= SoftwareSerial_maxCommandLength; i++){
+      SoftwareSerial_output[i] = 0;
+    }
+  }
 }
 
 void SoftwareSerial_executeCommand(char commandToExecute[]){
@@ -41,24 +66,24 @@ void SoftwareSerial_executeCommand(char commandToExecute[]){
   SoftwareSerial_commandRed = false;
 }
 
-String SoftwareSerial_readOutput(){
-  String output_copy = SoftwareSerial_output;
-  SoftwareSerial_output[0] = 0;
-  SoftwareSerial_outputRed = true;
-  return output_copy;
-}
+//String SoftwareSerial_readOutput(){
+//  String output_copy = SoftwareSerial_output;
+//  SoftwareSerial_output[0] = 0;
+//  SoftwareSerial_outputRed = true;
+//  return output_copy;
+//}
 
 void SoftwareSerial_new_command(String command){
   
 }
 
-void SoftwareSerial_reset_state(){
-  SoftwareSerial_command[0] = 0;
-  SoftwareSerial_output[0] = 0;
-
-  SoftwareSerial_commandRed = true;
-  SoftwareSerial_outputRed = true;
-}
+//void SoftwareSerial_reset_state(){
+//  SoftwareSerial_command[0] = 0;
+//  SoftwareSerial_output[0] = 0;
+//
+//  SoftwareSerial_commandRed = true;
+//  SoftwareSerial_outputRed = true;
+//}
 
 /*
  * Public methods
@@ -75,6 +100,7 @@ void SoftwareSerial_command_stopContact() {
   SoftwareSerial_executeCommand(SoftwareSerial_stopContact);
 }
 
+//todo also do this on the arduino to make sure that the characters don't mix up
 void SoftwareSerial_command_startIgnition(int ignitionTime) {
   char commandToExecute[13];
   sprintf(commandToExecute, "%s%d", SoftwareSerial_startIgnition, ignitionTime);
@@ -88,6 +114,9 @@ void SoftwareSerial_command_status() {
 /*
  * Getters
  */
-int SoftwareSerial_fetch_status() {
-
-}
+//int SoftwareSerial_fetch_status() {
+//  charIndex = 0;
+//  int i;
+//  sscanf(SoftwareSerial_output, "%d", &i);
+//  return i;
+//}

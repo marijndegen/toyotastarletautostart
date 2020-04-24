@@ -75,5 +75,8 @@ void WifiWeb_startIgnition() {
 */
 void WifiWeb_status() {
   SoftwareSerial_command_status();
-  server.send(200, "text/html", "<h1>status</h1>");
+}
+
+void WifiWeb_sendStatus(int statusIndicator){
+  server.send(200, "text/html", "<h1>" + String(statusIndicator) + "</h1>");
 }
