@@ -26,6 +26,7 @@ class _ToyotaStarletState extends State<ToyotaStarlet> {
   Color _disabledColor = Colors.grey;
   Color _startColor = Colors.green;
   Color _stopColor = Colors.red;
+  Color _disconnectedColor = Colors.blue;
 
   //State variables
   List<String> _startTimesOptions = [
@@ -47,62 +48,59 @@ class _ToyotaStarletState extends State<ToyotaStarlet> {
 
   bool listening = false;
 
-  _ToyotaStarletState(){
+  _ToyotaStarletState() {
     getIP();
-
   }
 
-  void initState(){
+  void initState() {
     super.initState();
     print("CREATING WIDGET");
     startListening();
   }
 
-  void startListening(){
-      if(!listening){
-        setState(() {
-          listening = true;
-        });
-        widget.cis.carStatusStream().listen(
-                (data) {
-              print('Statusint: $data');
-              setState(() {
-                _carStatus = data;
-              });
-            },
-            onError: (err){
-              print(err.toString());
-            },
-            onDone: (){
-              print("Status shouldn't be done but is done..");
-              setState(() {
-                listening = false;
-              });
+  void startListening() {
+    if (!listening) {
+      widget.cis.carStatusStream().listen(
+              (data) {
+            print('Statusint: $data');
+            setState(() {
+              _carStatus = data;
+              listening = true;
+            });
+          },
+          onError: (err) {
+            print(err.toString());
+          },
+          onDone: () {
+            print("Status shouldn't be done but is done..");
+            setState(() {
+              listening = false;
+            });
 
-              _scaffoldKey.currentState.showSnackBar(
-                  SnackBar(
-                    content: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[
-                        Text("Error, couln't connect with the wifi chip."),
-                        IconButton(
-                            icon: Icon(Icons.do_not_disturb),
-                            onPressed: () {
-                              _scaffoldKey.currentState.hideCurrentSnackBar();
-                            }
-                        ),
-                      ],
-                    ),
-                    duration: Duration(seconds: 10),
+            _scaffoldKey.currentState.showSnackBar(
+                SnackBar(
+                  content: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: <Widget>[
+                      Text("Error, couln't connect with the wifi chip."),
+                      IconButton(
+                          icon: Icon(Icons.do_not_disturb),
+                          onPressed: () {
+                            _scaffoldKey.currentState.hideCurrentSnackBar();
+                          }
+                      ),
+                    ],
+                  ),
+                  duration: Duration(seconds: 10),
 
-                  )
-              );
-            }
-        );
-      }
+                )
+            );
+          }
+      );
     }
+  }
 
-  void dispose () {
+  void dispose() {
     super.dispose();
     print("DISPOSING WIDGET");
     widget.cis.polling = false;
@@ -126,124 +124,147 @@ class _ToyotaStarletState extends State<ToyotaStarlet> {
         title: Text(appTitle),
       ),
       body: Center(
-          child: Column(
-        children: <Widget>[
-          /*Text(ipAdress),*/
-          InstructionText(),
-          DropdownButton(
-            // Not necessary for Option 1
-            value: _selectedStartTime,
-            onChanged: (newValue) {
-              setState(() {
-                _selectedStartTime = newValue;
-              });
-            },
-            items: _startTimesOptions.map((location) {
-              return DropdownMenuItem(
-                child: new Text(location),
-                value: location,
-              );
-            }).toList(),
-          ),
-          Container(
+        child: Column(
+            children: <Widget>[
+            /*Text(ipAdress),*/
+            InstructionText(),
+        DropdownButton(
+          // Not necessary for Option 1
+          value: _selectedStartTime,
+          onChanged: (newValue) {
+            setState(() {
+              _selectedStartTime = newValue;
+            });
+          },
+          items: _startTimesOptions.map((location) {
+            return DropdownMenuItem(
+              child: new Text(location),
+              value: location,
+            );
+          }).toList(),
+        ),
+        Container(
             margin: EdgeInsets.all(15),
-            width: MediaQuery.of(context).size.width,
+            width: MediaQuery
+                .of(context)
+                .size
+                .width,
             child: SizedBox(
                 width: 280,
                 height: 280,
-                child: !_isCarRunning() && !_blockUserInput
-                    ? FloatingActionButton(
-                        onPressed: () async {
-                          startListening();
+                child: !listening
+                ? FloatingActionButton(
+              onPressed: () => startListening(),
+              backgroundColor: _disconnectedColor,
+              child: Icon(
+                Icons.signal_cellular_connected_no_internet_4_bar,
+                size: 150,
+              ),
+            ) : !_isCarRunning() && !_blockUserInput
+                ? FloatingActionButton(
+              onPressed: () async {
+                startListening();
 
-                          //Set the state to attempting to start and put the car in contact.
-                          setState(() {
-                            _blockUserInput = true;
-                          });
+                //Set the state to attempting to start and put the car in contact.
+                setState(() {
+                  _blockUserInput = true;
+                });
 
-                          if(_contactOff()) {
-                            await widget.cis.startContact();
-                          }
+                if (_isContactOff()) {
+                  await widget.cis.startContact();
+                }
 
-                          await widget.cis.sleep(400); //Give 400MS between the moment of contact and the starting process.
+                await widget.cis.sleep(
+                    400); //Give 400MS between the moment of contact and the starting process.
 
-                          //Attempt to start the car.
-                          await widget.cis.ignite(int.parse(_selectedStartTime));
+                //Attempt to start the car.
+                await widget.cis.ignite(int.parse(_selectedStartTime));
 
-                          //Check after 3000 MS if the car started successfully.
-                          await widget.cis.sleep(3000); //Give 3000MS between the moment of starting and the check if the car started successfully.
+                //Check after 3000 MS if the car started successfully.
+                await widget.cis.sleep(
+                    3000); //Give 3000MS between the moment of starting and the check if the car started successfully.
 
-                          //Change the values, based on the outcome of the car.
-                          setState(() {
-                            _blockUserInput = false;
-                          });
-                        },
-                        backgroundColor: _startColor,
-                        child: Icon(
-                          Icons.play_circle_filled,
-                          size: 150,
-                        ),
-                      )
-                    : _blockUserInput
-                        ? FloatingActionButton(
-                            onPressed: null,
-                            //Nothing needs to be done, the state should be updated based on the startContact function.
-                            backgroundColor: _disabledColor,
-                            child: Icon(
-                              Icons.stop,
-                              size: 150,
-                            ),
-                          )
-                        : _isCarRunning()
-                            ? FloatingActionButton(
-                                onPressed: () async {
-                                  setState(() {
-                                    //call the stopcontact function here.
-                                    _blockUserInput = true; //NOTE THIS IS NOT ATTEMPTING, JUST TO BLOCK USER INTERACTION.
-                                  });
+                //Change the values, based on the outcome of the car.
+                setState(() {
+                  _blockUserInput = false;
+                });
+              },
+              backgroundColor: _startColor,
+              child: Icon(
+                Icons.play_circle_filled,
+                size: 150,
+              ),
+            )
+                : _blockUserInput
+                ? FloatingActionButton(
+              onPressed: null,
+              //Nothing needs to be done, the state should be updated based on the startContact function.
+              backgroundColor: _disabledColor,
+              child: Icon(
+                Icons.stop,
+                size: 150,
+              ),
+            )
+                : _isCarRunning()
+                ? FloatingActionButton(
+              onPressed: () async {
+                setState(() {
+                  //call the stopcontact function here.
+                  _blockUserInput =
+                  true; //NOTE THIS IS NOT ATTEMPTING, JUST TO BLOCK USER INTERACTION.
+                });
 
-                                  await widget.cis.stopContact();
+                await widget.cis.stopContact();
 
-                                  //Check after 3000 MS if the car started successfully.
-                                  await widget.cis.sleep(3000); //Give 3000MS between the moment of starting and the check if the car started successfully.
+                //Check after 3000 MS if the car started successfully.
+                await widget.cis.sleep(
+                    3000); //Give 3000MS between the moment of starting and the check if the car started successfully.
 
-                                  setState(() {
-                                    //call the stopcontact function here.
-                                    _blockUserInput = false; //NOTE THIS IS NOT ATTEMPTING, JUST TO BLOCK USER INTERACTION.
-                                  });
-
-                                },
-                                backgroundColor: _stopColor,
-                                child: Icon(
-                                  Icons.stop,
-                                  size: 150,
-                                ),
-                              )
-                            : FloatingActionButton(
-                                onPressed: null,
-                                backgroundColor: _disabledColor,
-                                child: SizedBox(
-                                  width: 150,
-                                  height: 150,
-                                  child: CircularProgressIndicator(),
-                                ),
-                              )),
-          ),
-          StatusText(
-            blockUserInput: this._blockUserInput,
-            status: this._carStatus,
-          ),
-        ],
-      )),
+                setState(() {
+                  //call the stopcontact function here.
+                  _blockUserInput =
+                  false; //NOTE THIS IS NOT ATTEMPTING, JUST TO BLOCK USER INTERACTION.
+                });
+              },
+              backgroundColor: _stopColor,
+              child: Icon(
+                Icons.stop,
+                size: 150,
+              ),
+            )
+                : FloatingActionButton(
+              onPressed: null,
+              backgroundColor: _disabledColor,
+              child: SizedBox(
+                width: 150,
+                height: 150,
+                child: CircularProgressIndicator(),
+              ),
+            )),
+      ),
+      StatusText(
+        blockUserInput: this._blockUserInput,
+        status: this._carStatus,
+      ),
+      ],
+    )),
+    floatingActionButton
+    :
+    null
+    ,
     );
   }
 
 
-  bool _contactOff() {
+  bool _isContactOff() {
     return _carStatus == -2;
   }
 
   bool _isCarRunning() {
     return _carStatus >= 0;
   }
+
+/*  bool _isCarDisconnected() {
+    return ;
+  }*/
 }

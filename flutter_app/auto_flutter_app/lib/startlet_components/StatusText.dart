@@ -29,8 +29,11 @@ class StatusText extends StatelessWidget {
             CircularProgressIndicator(),
           ],
         ) :
-        !blockUserInput && status < 0  ? Text('The car is not running') :
-        !blockUserInput && status >= 0  ? Text('The car is running') :
+        !blockUserInput && status == -100 ? Text("Unable to give accurate status. - 100") :
+        !blockUserInput && status == -3  ? Text('The car is not running -3') :
+        !blockUserInput && status == -2  ? Text('The car is not running -2') :
+        !blockUserInput && status == -1  ? Text('The car is not running -1') :
+        !blockUserInput && status >= 0  ? Text('The car is running 0 +') :
         Column(
           children: <Widget>[
             Text('Attempting to fetch car status'),

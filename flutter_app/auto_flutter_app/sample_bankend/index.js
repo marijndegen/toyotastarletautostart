@@ -7,24 +7,28 @@ const port = 80;
 let started = false;
 let contact = false;
 
-app.get('/car/start/contact/', function (req, res) {
+//between 0 and 2 (floating point), the higher the number, the bigger the chance of succes.
+let errorSimulator = 1.8; 
+
+app.get('/car/start/contact', function (req, res) {
   contact = true;
   console.log('Car on contact.');
   res.send('contact');
 });
 
-app.get('/car/stop/contact/', function (req, res) {
+app.get('/car/stop/contact', function (req, res) {
   contact = false;
   started = false;
   console.log('Car off contact.');
   res.send();
 }); 
 
-app.get('/car/start/ignition/:ignitionTime/', function (req, res) {
-  const number = Math.round(Math.random() * 1.2);
+app.get('/car/start/ignition', function (req, res) {
+  console.log("igniting");
+  const number = Math.round(Math.random() * errorSimulator);
   if(number == 1){ //let some randomness occur to not start the car.
 	started = true;
-	console.log("Starting car with ignitionTime:" + req.params.ignitionTime);
+	console.log("Starting car with ignitionTime:" + req.query.ignitionTime);
   }else{
 	console.log("Simulating an error.");
   }
@@ -33,7 +37,7 @@ app.get('/car/start/ignition/:ignitionTime/', function (req, res) {
   res.send();
 });
 
-app.get('/car/status/', function (req, res) {
+app.get('/car/status', function (req, res) {
   statusText = "";
   if(!contact)
 	  statusText += "The car is off contact";
@@ -49,8 +53,8 @@ app.get('/car/status/', function (req, res) {
   if(!started && !contact){ //this can also be random based on the number.
 	res.send("-2");  
   }else if(!started && contact){ //this can also be random based on the number.
-	res.send("50");  
-  } else {
+	res.send("-1");  
+  } else if(started && contact) {
 	res.send(Math.round(Math.random() * (100 - 1) + 1).toString());
   }
   
