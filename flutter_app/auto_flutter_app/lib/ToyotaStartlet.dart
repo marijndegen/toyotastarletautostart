@@ -8,6 +8,8 @@ import 'package:get_ip/get_ip.dart';
 final String appName = 'Toyota Starlet 1989';
 final String appTitle = 'Toyota Startlet 1989 van Marijn';
 
+final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
 class ToyotaStarlet extends StatefulWidget {
 
   final CarInterfaceService cis;
@@ -76,6 +78,25 @@ class _ToyotaStarletState extends State<ToyotaStarlet> {
               setState(() {
                 listening = false;
               });
+
+              _scaffoldKey.currentState.showSnackBar(
+                  SnackBar(
+                    content: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: <Widget>[
+                        Text("Error, couln't connect with the wifi chip."),
+                        IconButton(
+                            icon: Icon(Icons.do_not_disturb),
+                            onPressed: () {
+                              _scaffoldKey.currentState.hideCurrentSnackBar();
+                            }
+                        ),
+                      ],
+                    ),
+                    duration: Duration(seconds: 10),
+
+                  )
+              );
             }
         );
       }
@@ -100,6 +121,7 @@ class _ToyotaStarletState extends State<ToyotaStarlet> {
   Widget build(BuildContext context) {
 //    print(_carStatus.toString());
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text(appTitle),
       ),
