@@ -20,47 +20,6 @@ class ToyotaStarlet extends StatefulWidget {
 
 class _ToyotaStarletState extends State<ToyotaStarlet> {
 
-  _ToyotaStarletState(){
-    getIP();
-
-  }
-
-  void initState(){
-    super.initState();
-    print("CREATING WIDGET");
-
-    widget.cis.polling = true;
-    widget.cis.carStatusStream().listen(
-            (data) {
-          print('Statusint: $data');
-          setState(() {
-            _carStatus = data;
-          });
-        },
-        onError: (err){
-          print(err.toString());
-        },
-      onDone: (){
-              print("Status shouldn't be done but is done..");
-      }
-    );
-  }
-
-  void dispose () {
-    super.dispose();
-    print("DISPOSING WIDGET");
-    widget.cis.polling = false;
-  }
-
-  void getIP() async {
-    String ipAddresS = await GetIp.ipAddress;
-
-    setState(() {
-      print("tried to fetch ip");
-      ipAdress = ipAddresS;
-    });
-  }
-
   //Final variables
   Color _disabledColor = Colors.grey;
   Color _startColor = Colors.green;
@@ -83,6 +42,59 @@ class _ToyotaStarletState extends State<ToyotaStarlet> {
   int _carStatus = -100;
 
   bool _blockUserInput = false;
+
+  bool listening = false;
+
+  _ToyotaStarletState(){
+    getIP();
+
+  }
+
+  void initState(){
+    super.initState();
+    print("CREATING WIDGET");
+    startListening();
+  }
+
+  void startListening(){
+      if(!listening){
+        setState(() {
+          listening = true;
+        });
+        widget.cis.carStatusStream().listen(
+                (data) {
+              print('Statusint: $data');
+              setState(() {
+                _carStatus = data;
+              });
+            },
+            onError: (err){
+              print(err.toString());
+            },
+            onDone: (){
+              print("Status shouldn't be done but is done..");
+              setState(() {
+                listening = false;
+              });
+            }
+        );
+      }
+    }
+
+  void dispose () {
+    super.dispose();
+    print("DISPOSING WIDGET");
+    widget.cis.polling = false;
+  }
+
+  void getIP() async {
+    String ipAddresS = await GetIp.ipAddress;
+
+    setState(() {
+//      print("tried to fetch ip");
+      ipAdress = ipAddresS;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -120,6 +132,8 @@ class _ToyotaStarletState extends State<ToyotaStarlet> {
                 child: !_isCarRunning() && !_blockUserInput
                     ? FloatingActionButton(
                         onPressed: () async {
+                          startListening();
+
                           //Set the state to attempting to start and put the car in contact.
                           setState(() {
                             _blockUserInput = true;

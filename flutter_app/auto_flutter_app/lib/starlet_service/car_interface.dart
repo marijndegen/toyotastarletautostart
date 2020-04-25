@@ -22,28 +22,28 @@ class CarInterfaceService{
     polling = true;
   }
 
+  //todo all these timeout errors should be handeld.
   Future startContact() async {
     print("Contact on...");
     const String url = serverPrefix + startEndpoint;
-    await simpleBoolHttpRequest(url);
+    await simpleBoolHttpRequest(url).timeout(Duration(milliseconds: 3000));
   }
 
   Future stopContact() async {
     print("Contact off...");
     const String url = serverPrefix + stopEndpoint;
-    await simpleBoolHttpRequest(url);
+    await simpleBoolHttpRequest(url).timeout(Duration(milliseconds: 3000));
   }
 
   Future ignite(int igniteTime) async{
     print("Igniting...");
     final String url = serverPrefix + ignitionEndpoint(igniteTime);
-    await simpleBoolHttpRequest(url);
+    await simpleBoolHttpRequest(url).timeout(Duration(milliseconds: 3000));
   }
 
   Future<int> status() async {
     const url = serverPrefix + statusEndpoint;
     var response = await http.get(url);
-
     var status = -100;
 
     try{
@@ -81,21 +81,19 @@ class CarInterfaceService{
   }
 
   Stream<int> carStatusStream() async*{
-    int initialStatus;
     bool connected;
-
-    try{
-      initialStatus = await this.status().timeout(Duration(milliseconds: 2500));
-      connected = (initialStatus >= -2);
-      if(!connected)
-        throw("");
-    }catch (e){
+    int status;
+    do{
+      try{
+        status = await this.status().timeout(Duration(milliseconds: 2500));
+        connected = (status >= -2);
+        if(!connected)
+          throw("");
+      }catch(e){
         throw("Not connected with statusStream!!");
-    }
-
-    while(connected && polling){
-      await sleep(3000); //this maybe can be changed to 2500, so that there are 4 updates a second.
-      yield await this.status().timeout(Duration(milliseconds: 2500));
-    }
+      }
+      yield status;
+      await sleep(3000);
+    }while(connected && polling);
   }
 }
