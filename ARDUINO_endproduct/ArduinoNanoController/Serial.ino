@@ -33,6 +33,7 @@ void Serial_loop() {
     }
     
     if(readString.startsWith("ignition/")){
+      Serial.println("1234");
       String ignitionTimeString = readString.substring(9);
       int ignitionTime = ignitionTimeString.toInt();
       Relais_ignite(ignitionTime);
@@ -44,7 +45,7 @@ void Serial_loop() {
       char numberOfSecondsOn[13];
       int randomNumber = random( -2, 1);
       Serial.println(randomNumber);
-      sprintf(numberOfSecondsOn, "%d", /*aRandomNumber*/ 1);
+      sprintf(numberOfSecondsOn, "%d", /*aRandomNumber*/ -2);
       
       ArduinoUno.write(numberOfSecondsOn);
     }
