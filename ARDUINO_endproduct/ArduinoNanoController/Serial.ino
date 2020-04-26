@@ -23,7 +23,7 @@ void Serial_loop() {
 
   if (readString.length() > 0) {
     if(readString == "start/" || readString == "stop/" || readString.startsWith("ignition/") || readString == "status/"){
-      Serial.println(readString);
+      Serial.print(readString + " ");
     }
     
     if(readString == "start/"){
@@ -57,9 +57,9 @@ void Serial_loop() {
       long statusCar;
       if(!contact){
         statusCar = -2;
-      } else if (contact && !Tilt_on){
+      } else if (contact && !Tilt_on()){
         statusCar = -1;
-      } else if (contact && Tilt_on){
+      } else if (contact && Tilt_on()){
         statusCar = Tilt_secondsOn();
       }
 
@@ -68,15 +68,14 @@ void Serial_loop() {
 
       Serial.println(statusCar);
 
-      char numberOfSecondsOn[13];
-//      int randomNumber = random( -2, 1);
-//      Serial.println(randomNumber);
-      sprintf(numberOfSecondsOn, "%d", statusCar);
-
-
-      ArduinoUno.write(numberOfSecondsOn);
+      char serialCarStatus[13];
+      sprintf(serialCarStatus, "%d", statusCar);
+      ArduinoUno.write(serialCarStatus);
     }
     readString="";
+
+    Serial.print("Tilt_secondsOn: ");
+    Serial.println(Tilt_secondsOn());
   }
   
 }

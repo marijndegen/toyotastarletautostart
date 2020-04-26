@@ -23,11 +23,11 @@ void Tilt_loop() {
   if (currentStatusWaitTime >= (STATUS_INTERVAL - CHECK_PRE) && checkForStatus) {
     if(wasDisruptedInlastTwoSeconds)
     {
-      Serial.println("the car is on");
+      //Serial.println("the car is on");
       Tilt_registerCarOn();
       wasDisruptedInlastTwoSeconds = false;
     }else{
-      Serial.println("the car is not on");
+      //Serial.println("the car is not on");
       Tilt_registerCarOff();
     }
     checkForStatus = false;
@@ -42,7 +42,7 @@ void Tilt_loop() {
   if (currentTiltWaitTime >= (TILT_INTERVAL - CHECK_PRE) && checkForTilt && !wasDisruptedInlastTwoSeconds) {
     if(digitalRead(INPUT_TILT_SENSOR) == LOW)
     {
-      Serial.println("busted");
+      //Serial.println("busted");
       wasDisruptedInlastTwoSeconds = true;
     }
     checkForTilt = false;
@@ -59,8 +59,8 @@ void Tilt_registerCarOn(){
 
 void Tilt_registerCarOff(){
   tiltStatus = -1;
-  Serial.println("tilt now off");
-  Serial.println(tiltStatus);
+  //Serial.print("Tilt status: ");
+  //Serial.println(tiltStatus);
 }
 
 bool Tilt_on(){
@@ -68,6 +68,9 @@ bool Tilt_on(){
 }
 
 long Tilt_secondsOn() {
-  
+  //this method should return -1 when tiltstatus is - 1
+  if(tiltStatus < 0){
+    return tiltStatus;
+  }
   return (long) (millis() / 1000) - tiltStatus;
 }
