@@ -46,7 +46,7 @@ class _ToyotaStarletState extends State<ToyotaStarlet> {
 
   bool _blockUserInput = false;
 
-  bool listening = false;
+  bool _listening = false;
 
   _ToyotaStarletState() {
     getIP();
@@ -59,13 +59,13 @@ class _ToyotaStarletState extends State<ToyotaStarlet> {
   }
 
   void startListening() {
-    if (!listening) {
+    if (!_listening) {
       widget.cis.carStatusStream().listen(
               (data) {
             print('Statusint: $data');
             setState(() {
               _carStatus = data;
-              listening = true;
+              _listening = true;
             });
           },
           onError: (err) {
@@ -74,7 +74,7 @@ class _ToyotaStarletState extends State<ToyotaStarlet> {
           onDone: () {
             print("Status shouldn't be done but is done..");
             setState(() {
-              listening = false;
+              _listening = false;
             });
 
             _scaffoldKey.currentState.showSnackBar(
@@ -152,7 +152,7 @@ class _ToyotaStarletState extends State<ToyotaStarlet> {
             child: SizedBox(
                 width: 280,
                 height: 280,
-                child: !listening
+                child: !_listening
                 ? FloatingActionButton(
               onPressed: () => startListening(),
               backgroundColor: _disconnectedColor,
@@ -198,7 +198,6 @@ class _ToyotaStarletState extends State<ToyotaStarlet> {
                 : _blockUserInput
                 ? FloatingActionButton(
               onPressed: null,
-              //Nothing needs to be done, the state should be updated based on the startContact function.
               backgroundColor: _disabledColor,
               child: Icon(
                 Icons.stop,
@@ -207,25 +206,7 @@ class _ToyotaStarletState extends State<ToyotaStarlet> {
             )
                 : _isCarRunning()
                 ? FloatingActionButton(
-              onPressed: () async {
-                setState(() {
-                  //call the stopcontact function here.
-                  _blockUserInput =
-                  true; //NOTE THIS IS NOT ATTEMPTING, JUST TO BLOCK USER INTERACTION.
-                });
-
-                await widget.cis.stopContact();
-
-                //Check after 3000 MS if the car started successfully.
-                await widget.cis.sleep(
-                    3000); //Give 3000MS between the moment of starting and the check if the car started successfully.
-
-                setState(() {
-                  //call the stopcontact function here.
-                  _blockUserInput =
-                  false; //NOTE THIS IS NOT ATTEMPTING, JUST TO BLOCK USER INTERACTION.
-                });
-              },
+              onPressed: () => _stopContact(),
               backgroundColor: _stopColor,
               child: Icon(
                 Icons.stop,
@@ -248,16 +229,41 @@ class _ToyotaStarletState extends State<ToyotaStarlet> {
       ),
       ],
     )),
-    floatingActionButton
-    :
-    null
-    ,
+
+    //Should only be issued when the contact is on.
+    floatingActionButton: _listening && _isContactOn() ?
+        FloatingActionButton(
+          onPressed: _blockUserInput ? null : () => _stopContact(),
+          backgroundColor: _stopColor,
+          child: Center(
+            child: Icon(Icons.highlight_off)
+          ),
+        ) :
+        null
     );
+  }
+
+  void _stopContact () async {
+    setState(() {
+      _blockUserInput = true;
+    });
+
+    await widget.cis.stopContact();
+
+    await widget.cis.sleep(3000);
+
+    setState(() {
+      _blockUserInput = false;
+    });
   }
 
 
   bool _isContactOff() {
     return _carStatus == -2;
+  }
+
+  bool _isContactOn(){
+    return _carStatus == -1;
   }
 
   bool _isCarRunning() {
