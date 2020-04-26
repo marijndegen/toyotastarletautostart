@@ -11,7 +11,7 @@
 const char *ssid = APSSID;
 const char *password = APPSK;
 
-ESP8266WebServer server(46969);
+ESP8266WebServer server(80);
 
 void WifiWeb_setup() {
   delay(1000);
