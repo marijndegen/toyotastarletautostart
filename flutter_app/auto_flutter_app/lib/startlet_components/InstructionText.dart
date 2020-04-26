@@ -9,9 +9,9 @@ class InstructionText extends StatelessWidget {
       children: <Widget>[
         Text('Start engine', style: theme.textTheme.display1,),
 
-        Text('800MS for a hot engine\n1000MS for a cold engine\n1100MS for the winter morning\n1250MS+ for when the car is trashed\n', style: theme.textTheme.body1, textAlign: TextAlign.center,),
+//        Text('800MS for a hot engine, 1000MS for a cold engine, 1100MS for the winter morning, 1250MS+ for when the car is trashed.', style: theme.textTheme.body1, textAlign: TextAlign.center,),
 
-        Text('Please select a proper start engine power time:', style: theme.textTheme.body1, textAlign: TextAlign.center,),
+//        Text('Please select a proper start engine power time:', style: theme.textTheme.body1, textAlign: TextAlign.center,),
       ],
     );
   }
