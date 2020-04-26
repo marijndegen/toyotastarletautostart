@@ -1,14 +1,14 @@
 const express = require('express');
 const app = express();
 
-const server = '192.168.5.101';
+const server = '192.168.43.30';
 const port = 80;
 
 let started = false;
 let contact = false;
 
 //between 0 and 2 (floating point), the higher the number, the bigger the chance of succes.
-let errorSimulator = 1.8; 
+let errorSimulator = 1.4; 
 
 app.get('/car/start/contact', function (req, res) {
   contact = true;
