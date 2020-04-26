@@ -1,4 +1,4 @@
-const byte Relais_contactPin = 9;
+const byte Relais_contactPin = 10;
 const byte Relais_ignitePin = 8;
 
 void Relais_setup() {

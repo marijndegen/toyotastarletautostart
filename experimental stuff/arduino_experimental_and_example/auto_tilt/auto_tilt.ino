@@ -10,8 +10,6 @@ const int CHECK_PRE = 5;
 bool checkForStatus = true;
 bool checkForTilt = true;
 
-int motor = 0;
-
 bool wasDisruptedInlastTwoSeconds = false;
 
 
