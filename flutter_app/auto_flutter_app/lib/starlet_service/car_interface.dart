@@ -16,6 +16,8 @@ String ignitionEndpoint(int ignitionTime){
 }
 const String statusEndpoint = "/car/status";
 
+const int httpTimeout = 3500;
+const int httpStatusInterval = 3000;
 
 class CarInterfaceService{
 
@@ -68,7 +70,7 @@ class CarInterfaceService{
   Future<bool> simpleBoolHttpRequest(String url) async {
     var response;
     try{
-      response = await http.get(url).timeout(Duration(milliseconds: 2500));
+      response = await http.get(url).timeout(Duration(milliseconds: httpTimeout));
       print("SBHR service: " + url);
     }catch (e){
       print("Went wrong in the simplecatch block!");
@@ -88,7 +90,7 @@ class CarInterfaceService{
     int status;
     do{
       try{
-        status = await this.status().timeout(Duration(milliseconds: 2500));
+        status = await this.status().timeout(Duration(milliseconds: httpTimeout));
         connected = (status >= -2);
         if(!connected)
           throw("");
@@ -96,7 +98,7 @@ class CarInterfaceService{
         throw("Not connected with statusStream!!");
       }
       yield status;
-      await sleep(3000);
+      await sleep(httpStatusInterval);
     }while(connected && polling);
   }
 }
