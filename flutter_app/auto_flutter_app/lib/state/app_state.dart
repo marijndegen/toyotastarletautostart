@@ -5,7 +5,7 @@ import 'package:meta/meta.dart';
 @immutable
 class AppState{
 
-  final int selectedStartTime;
+  final String selectedStartTime;
 
   final String ipAdress;
 
@@ -19,7 +19,7 @@ class AppState{
 
   static AppState initial() {
     return AppState(
-      selectedStartTime: 1000,
+      selectedStartTime: "1000",
       ipAdress: "No IP detected",
       carStatus: -100,
       blockUserInput: false,
@@ -28,7 +28,7 @@ class AppState{
   }
 
   AppState copyWith(
-      {int selectedStartTime,
+      {String selectedStartTime,
       String ipAdress,
       int carStatus,
       bool blockUserInput,

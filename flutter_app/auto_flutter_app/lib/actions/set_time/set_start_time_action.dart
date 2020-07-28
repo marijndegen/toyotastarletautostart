@@ -1,5 +1,5 @@
 class SetStartTimeAction{
-  final int startTime;
+  final String startTime;
 
   SetStartTimeAction(this.startTime);
 }

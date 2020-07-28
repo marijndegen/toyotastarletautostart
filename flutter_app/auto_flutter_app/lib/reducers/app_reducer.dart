@@ -1,8 +1,10 @@
 import 'package:redux/redux.dart';
 import 'package:auto_flutter_app/state/app_state.dart';
-// import 'package:auto_flutter_app/';
-// import 'package:auto_flutter_app/';
+
+import 'control_reducer.dart';
+import 'start_time_reducer.dart';
+import 'status_reducer.dart';
 
 final appReducer = combineReducers<AppState>([
-  //list goes in here
+  startTimeReducer,
 ]);

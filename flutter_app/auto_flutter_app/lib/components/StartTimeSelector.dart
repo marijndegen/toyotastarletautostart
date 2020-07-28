@@ -1,4 +1,9 @@
+import 'package:auto_flutter_app/actions/set_time/set_start_time_action.dart';
 import 'package:flutter/material.dart';
+import 'package:redux/redux.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+
+import 'package:auto_flutter_app/state/app_state.dart';
 
 final List<String> _startTimesOptions = [
     '800',
@@ -14,26 +19,38 @@ class StartTimeSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-
-
-
-    //todo commit to git on a seperate branch and import redux, appstate, create function that dispatches setstarttimeaction.
+    
     return StoreConnector<AppState, _ViewModel>(
-              converter: (Store<AppState> store) => _ViewModel.fromStore(store),
-              builder: (BuildContext context, _ViewModel vm) {
-                return DropdownButton(
-          // Not necessary for Option 1
-          value: "1000",
-          onChanged: (newValue) {
-            //TODO DISPATCH THE ACTION
-          },
-          items: _startTimesOptions.map((location) {
-            return DropdownMenuItem(
-              child: new Text(location),
-              value: location,
-            );
-          }).toList(),
-    );
+          converter: (Store<AppState> store) => _ViewModel.fromStore(
+            store,  
+            (startTime) => store.dispatch(SetStartTimeAction(startTime))
+          ),
+          builder: (BuildContext context, _ViewModel vm) {
+            return DropdownButton(
+            value: vm.selectedStartTime,
+            onChanged: (newValue) => vm.onStartTimeChanged(newValue),
+            items: _startTimesOptions.map((location) {
+              return DropdownMenuItem(
+                child: new Text(location),
+                value: location,
+              );
+            }).toList(),
+      );
     });
+  }
+}
+
+class _ViewModel {
+  final String selectedStartTime;
+
+  final void Function(String startTime) onStartTimeChanged;
+
+  _ViewModel({this.selectedStartTime, this.onStartTimeChanged});
+
+  static _ViewModel fromStore(Store<AppState> store, onStartTimeChanged) {
+      return _ViewModel(
+        selectedStartTime: store.state.selectedStartTime,
+        onStartTimeChanged: onStartTimeChanged,
+      );
   }
 }

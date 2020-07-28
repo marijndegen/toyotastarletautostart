@@ -5,6 +5,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 // import 'package:auto_flutter_app/starlet_service/car_interface.dart';
 import 'package:auto_flutter_app/components/InstructionText.dart';
 import 'package:auto_flutter_app/components/StartTimeSelector.dart';
+import 'package:auto_flutter_app/components/ControlButton.dart';
 
 import 'package:auto_flutter_app/components/StatusText.dart';
 
@@ -26,10 +27,7 @@ final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
     '1750'
   ]; //Start engine power time
 
-final Color _disabledColor = Colors.grey;
-final Color _startColor = Colors.green;
-final Color _stopColor = Colors.red;
-final Color _disconnectedColor = Colors.blue;
+
 
 class ToyotaStarlet extends StatelessWidget {
   @override
@@ -48,45 +46,8 @@ class ToyotaStarlet extends StatelessWidget {
             children: <Widget>[
             InstructionText(),
             StartTimeSelector(),
-            //ControlButton(),
-            //StatusText() //TODO should consume blockuserInput and the status of the car.
-
-
-        // DropdownButton(
-        //   // Not necessary for Option 1
-        //   value: "1000",
-        //   onChanged: (newValue) {
-        //     //TODO DISPATCH THE ACTION
-        //   },
-        //   items: _startTimesOptions.map((location) {
-        //     return DropdownMenuItem(
-        //       child: new Text(location),
-        //       value: location,
-        //     );
-        //   }).toList(),
-        // ),
-      //   Container(
-      //       margin: EdgeInsets.all(15),
-      //       width: MediaQuery
-      //           .of(context)
-      //           .size
-      //           .width,
-      //       child: SizedBox(
-      //           width: 280,
-      //           height: 280,
-      //           child: FloatingActionButton(
-      //         onPressed: () => {},
-      //         backgroundColor: _disconnectedColor,
-      //         child: Icon(
-      //           Icons.signal_cellular_connected_no_internet_4_bar,
-      //           size: 150,
-      //         ),
-      //       )),
-      // ),
-      // StatusText(
-      //   blockUserInput: false,
-      //   status: -2,
-      // ),
+            ControlButton(),
+            //StatusText() //TODO should consume blockuserInput and the status of the car
       ],
     )),
 
