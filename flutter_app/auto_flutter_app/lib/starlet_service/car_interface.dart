@@ -3,7 +3,8 @@
 //import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 
-const String serverPrefix = "http://192.168.4.1";
+// const String serverPrefix = "http://192.168.4.1";
+const String serverPrefix = "http://192.168.178.122";
 //const String serverPrefix = "http://192.168.4.1:46969";
 //const String serverPrefix = "http://192.168.5.101:80";
 
