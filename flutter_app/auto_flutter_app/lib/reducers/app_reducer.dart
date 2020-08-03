@@ -8,4 +8,5 @@ import 'status_reducer.dart';
 final appReducer = combineReducers<AppState>([
   startTimeReducer,
   statusReducer,
+  controlReducer
 ]);

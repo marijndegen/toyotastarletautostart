@@ -17,19 +17,27 @@ class StatusMiddleware extends MiddlewareClass<AppState>{
   StatusMiddleware(this.client, this.api);
 
   @override
-  void call(Store<AppState> store, dynamic action, NextDispatcher next) {
-    if(action is FetchCarStatusAction){
-      String url = api + "/car/status";
-      client.get(url)
-        .then((response) {
-          if(response.statusCode == 200)
-            store.dispatch(CarStatusAction(int.tryParse(response.body) ?? -100));
-          else
-            store.dispatch(CarStatusErrorAction());
-          })
-        .catchError((error) {
-          store.dispatch(CarStatusErrorAction());
-        });
+  void call(Store<AppState> store, dynamic action, NextDispatcher next) async {
+    if(action is FetchCarStatusAction && store.state.listening){
+      String url = api + "car/status";
+      
+      final response = await client.get(url).timeout(
+        Duration(milliseconds: 1750),
+        onTimeout: () {
+          client.close();
+          next(action);
+          return null;
+        },
+      );
+
+      if (response is http.Response && response.statusCode == 200) {
+        store.dispatch(CarStatusAction(int.tryParse(response.body) ?? -100));
+        await Future.delayed(Duration(seconds: 2));
+        store.dispatch(FetchCarStatusAction());
+      } else {
+        // print('error in response code');
+        store.dispatch(CarStatusErrorAction());
+      }
     }
 
     next(action);

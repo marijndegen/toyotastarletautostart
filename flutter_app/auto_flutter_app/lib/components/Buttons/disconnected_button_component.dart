@@ -1,6 +1,8 @@
 import 'dart:async';
 
-import 'package:auto_flutter_app/actions/status/start_listening_action.dart';
+import 'package:auto_flutter_app/actions/.actions.dart';
+import 'package:auto_flutter_app/components/Buttons/control_button.dart';
+import 'package:auto_flutter_app/components/Buttons/control_view_model.dart';
 import 'package:auto_flutter_app/state/app_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -11,34 +13,13 @@ final Color _disconnectedColor = Colors.blue;
 class DisconnectedButton extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<AppState, _ViewModel>(
-          converter: (Store<AppState> store) => _ViewModel.withExecuteFunction(
-            () => store.dispatch(StartListeningAction()) //create dispatch function here, copy this file to every corosponding button (except disabled button.) 
+    return StoreConnector<AppState, ControlViewModel>(
+          converter: (Store<AppState> store) => ControlViewModel.withExecuteFunction(
+            () { store.dispatch(StartListeningAction()); store.dispatch(FetchCarStatusAction()); } 
           ),
-          builder: (BuildContext context, _ViewModel vm) {
-              return FloatingActionButton(
-              onPressed: () {
-                vm.executeButtonFuction();
-              },
-              backgroundColor: _disconnectedColor,
-              child: Icon(
-                Icons.play_circle_filled,
-                size: 150,
-              ),
-            );   
-          });
+          builder: (BuildContext context, ControlViewModel vm) =>
+            ControlButton(vm: vm, color: _disconnectedColor, icon: Icons.signal_cellular_connected_no_internet_4_bar)
+          );
   }
   
-}
-
-class _ViewModel {
-  final void Function() executeButtonFuction;
-
-  _ViewModel(this.executeButtonFuction);
-
-  static _ViewModel withExecuteFunction(executeButtonFuction) {
-      return _ViewModel(
-        executeButtonFuction
-      );
-  }
 }

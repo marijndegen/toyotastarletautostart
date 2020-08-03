@@ -26,8 +26,11 @@ void main() {
   final store = Store<AppState>(
     appReducer,
     initialState: AppState.initial(),
-    middleware: [...createAppMiddleware(http.Client()), LoggingMiddleware.printer()] //todo hiero
+    middleware: [...createAppMiddleware(http.Client()) /*, LoggingMiddleware.printer()*/] //todo hiero
     );
+
+    store.onChange.listen((AppState state) => print('listening: ' + state.listening.toString() + ' status ' + state.carStatus.toString() + ' blockinput ' + state.blockUserInput.toString()));
+
 
     runApp(StoreProvider(store: store, child:
       MaterialApp(
