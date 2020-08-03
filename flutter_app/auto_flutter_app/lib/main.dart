@@ -26,7 +26,7 @@ void main() {
   final store = Store<AppState>(
     appReducer,
     initialState: AppState.initial(),
-    middleware: [...createAppMiddleware(http.Client()), LoggingMiddleware.printer()]
+    middleware: [...createAppMiddleware(http.Client()), LoggingMiddleware.printer()] //todo hiero
     );
 
     runApp(StoreProvider(store: store, child:

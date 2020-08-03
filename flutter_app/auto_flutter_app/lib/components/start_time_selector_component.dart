@@ -23,7 +23,7 @@ class StartTimeSelector extends StatelessWidget {
     return StoreConnector<AppState, _ViewModel>(
           converter: (Store<AppState> store) => _ViewModel.fromStore(
             store,  
-            (startTime) => store.dispatch(SetStartTimeAction(startTime))
+            onStartTimeChanged: (startTime) => store.dispatch(SetStartTimeAction(startTime))
           ),
           builder: (BuildContext context, _ViewModel vm) {
             return DropdownButton(
@@ -47,7 +47,7 @@ class _ViewModel {
 
   _ViewModel({this.selectedStartTime, this.onStartTimeChanged});
 
-  static _ViewModel fromStore(Store<AppState> store, onStartTimeChanged) {
+  static _ViewModel fromStore(Store<AppState> store, {onStartTimeChanged}) {
       return _ViewModel(
         selectedStartTime: store.state.selectedStartTime,
         onStartTimeChanged: onStartTimeChanged,

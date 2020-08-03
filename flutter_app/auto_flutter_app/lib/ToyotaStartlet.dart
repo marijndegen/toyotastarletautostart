@@ -3,11 +3,11 @@ import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
 // import 'package:auto_flutter_app/starlet_service/car_interface.dart';
-import 'package:auto_flutter_app/components/InstructionText.dart';
-import 'package:auto_flutter_app/components/StartTimeSelector.dart';
-import 'package:auto_flutter_app/components/ControlButton.dart';
+import 'package:auto_flutter_app/components/instruction_text_component.dart';
+import 'package:auto_flutter_app/components/start_time_selector_component.dart';
+import 'package:auto_flutter_app/components/control_button_component.dart';
 
-import 'package:auto_flutter_app/components/StatusText.dart';
+import 'package:auto_flutter_app/components/status_text_component.dart';
 
 import 'package:auto_flutter_app/state/app_state.dart';
 // import 'package:get_ip/get_ip.dart';
