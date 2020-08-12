@@ -21,14 +21,19 @@ class StatusMiddleware extends MiddlewareClass<AppState>{
     if(action is FetchCarStatusAction && store.state.listening){
       String url = api + "car/status";
       
-      final response = await client.get(url).timeout(
+      var response;
+      try{
+        response = await client.get(url).timeout(
         Duration(milliseconds: 1750),
         onTimeout: () {
           client.close();
           next(action);
           return null;
-        },
-      );
+          },
+        );
+      } catch (e) {
+        store.dispatch(CarStatusErrorAction());
+      }
 
       if (response is http.Response && response.statusCode == 200) {
         store.dispatch(CarStatusAction(int.tryParse(response.body) ?? -100));

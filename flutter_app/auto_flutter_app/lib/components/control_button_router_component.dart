@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
+import 'Buttons/disabeld_button_component.dart';
+
 final Color _disabledColor = Colors.grey;
 final Color _startColor = Colors.green;
 final Color _stopColor = Colors.red;
@@ -19,6 +21,12 @@ class ControlButtonRouter extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return StoreConnector<AppState, _ViewModel>(
+          onInit: (store) {
+            print("initial fetch");
+            store.dispatch(StartListeningAction());
+            store.dispatch(FetchCarStatusAction());
+          },
+          //todo these functions are not needed.
           converter: (Store<AppState> store) => _ViewModel.fromStore(
             store, 
             startListening: () => store.dispatch(StartListeningAction()),
@@ -35,14 +43,11 @@ class ControlButtonRouter extends StatelessWidget {
                 width: 280,
                 height: 280,
                 child: 
-                //TODO making the blocking animation work.. 
-                //Configure that the app starts listening on startup.. 
-                //When the state changes between blocking and on off/ it flashes the old stage very briefly.
+                //TODO
                 //Currently, when one packet fails, an error action is dispatched and no retry is made, it should retry once.
                 (!vm.listening) ? DisconnectedButton() : 
                 (vm.listening && (vm.carStatus == -2 || vm.carStatus == -1) && !vm.blockUserInput) ? StartButton() : 
-                (vm.listening && (vm.carStatus > 0) && !vm.blockUserInput) ? StopButton() : 
-                Text('this state should probably show a blocking animation')
+                (vm.listening && (vm.carStatus > 0) && !vm.blockUserInput) ? StopButton() : DisabeldButton() 
                 ), //buttons here
             );
     });

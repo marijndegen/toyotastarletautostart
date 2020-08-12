@@ -32,7 +32,7 @@ final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 class ToyotaStarlet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    //TODO CREATE VIEWMODEL, ADJUST VARIABLES AND DISPATCH ACTIONS.
+    //TODO refactor this file
       return StoreConnector<AppState, _ViewModel>(
               converter: (Store<AppState> store) => _ViewModel.fromStore(store),
               builder: (BuildContext context, _ViewModel vm) {
@@ -47,7 +47,7 @@ class ToyotaStarlet extends StatelessWidget {
             InstructionText(),
             StartTimeSelector(),
             ControlButtonRouter(),
-            //StatusText() //TODO should consume blockuserInput and the status of the car
+            //StatusText() //TODO create this component like the old one.
       ],
     )),
 
