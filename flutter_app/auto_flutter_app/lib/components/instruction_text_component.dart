@@ -13,9 +13,9 @@ class InstructionText extends StatelessWidget {
       
       //Text(ipAdress),
 
-        Text('Please select a proper start engine power time:\n', style: theme.textTheme.body1, textAlign: TextAlign.center,),
+        Text('Please select a proper start engine power time:', style: theme.textTheme.body1, textAlign: TextAlign.center,),
       
-        Text('800MS for a hot engine,\n 1000MS for a cold engine,\n 1100MS for the winter morning,\n 1250MS+ for when the car is trashed.', style: theme.textTheme.body1, textAlign: TextAlign.center,),
+        Text('- 800MS for a hot engine,\n - 1000MS for a cold engine,\n - 1100MS for the winter morning', style: theme.textTheme.body1, textAlign: TextAlign.center,),
       ],
     );
   }

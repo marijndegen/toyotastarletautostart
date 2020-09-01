@@ -29,8 +29,8 @@ class ControlButtonRouter extends StatelessWidget {
           //todo these functions are not needed.
           converter: (Store<AppState> store) => _ViewModel.fromStore(
             store, 
-            startListening: () => store.dispatch(StartListeningAction()),
-            fetchCarStatus: () => store.dispatch(FetchCarStatusAction())
+            //startListening: () => store.dispatch(StartListeningAction()),
+            //fetchCarStatus: () => store.dispatch(FetchCarStatusAction())
           ),
           builder: (BuildContext context, _ViewModel vm) {
                 return  Container(
@@ -40,8 +40,8 @@ class ControlButtonRouter extends StatelessWidget {
                 .size
                 .width,
             child: SizedBox(
-                width: 280,
-                height: 280,
+                width: 250,
+                height: 250,
                 child: 
                 //TODO
                 //Currently, when one packet fails, an error action is dispatched and no retry is made, it should retry once.
@@ -61,20 +61,20 @@ class _ViewModel {
 
   final bool listening;
 
-  final void Function() startListening;
+  // final void Function() startListening;
   
-  final void Function() fetchCarStatus;
+  // final void Function() fetchCarStatus;
 
 
-  _ViewModel({this.carStatus, this.blockUserInput, this.listening, this.startListening, this.fetchCarStatus});
+  _ViewModel({this.carStatus, this.blockUserInput, this.listening, /*this.startListening, this.fetchCarStatus*/});
 
   static _ViewModel fromStore(Store<AppState> store, {startListening, fetchCarStatus}) {
       return _ViewModel(
         carStatus: store.state.carStatus,
         blockUserInput: store.state.blockUserInput,
         listening: store.state.listening,
-        startListening: startListening,
-        fetchCarStatus: fetchCarStatus
+        // startListening: startListening,
+        // fetchCarStatus: fetchCarStatus
       );
   }
 }

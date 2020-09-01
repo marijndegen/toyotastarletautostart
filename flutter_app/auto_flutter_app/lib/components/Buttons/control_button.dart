@@ -20,7 +20,7 @@ class ControlButton extends StatelessWidget{
               backgroundColor: color,
               child: Icon(
                 icon,
-                size: 150,
+                size: 134,
               ),
             );
   }

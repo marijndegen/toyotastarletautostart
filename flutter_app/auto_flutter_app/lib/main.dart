@@ -8,8 +8,6 @@ import 'package:auto_flutter_app/state/app_state.dart';
 import 'package:auto_flutter_app/middleware/app_middleware.dart';
 import 'package:http/http.dart' as http;
 
-
-
 import 'package:auto_flutter_app/ToyotaStartlet.dart';
 // import 'package:auto_flutter_app/starlet_service/car_interface.dart';
 import 'package:flutter/material.dart';
