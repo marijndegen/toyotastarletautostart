@@ -1,5 +1,5 @@
 
-import 'package:auto_flutter_app/components/Buttons/control_button.dart';
+import 'package:auto_flutter_app/components/buttons/control_button.dart';
 import 'package:flutter/material.dart';
 
 final Color _disabledColor = Colors.grey;

@@ -1,3 +1,4 @@
+import 'package:auto_flutter_app/actions/notifications/show_message.dart';
 import 'package:auto_flutter_app/actions/status/car_status_action.dart';
 import 'package:auto_flutter_app/actions/status/car_status_error_action.dart';
 import 'package:auto_flutter_app/actions/status/fetch_car_status_action.dart';
@@ -7,14 +8,15 @@ import 'package:redux/redux.dart';
 
 import 'package:http/http.dart' as http;
 
-//todo statusepic in main zien te implementeren, zorgen dat de statusepic stream werkt.
 class StatusMiddleware extends MiddlewareClass<AppState>{
 
   final http.Client client;
 
   final String api;
 
-  StatusMiddleware(this.client, this.api);
+  final int retries;
+
+  StatusMiddleware(this.client, this.api, this.retries);
 
   @override
   void call(Store<AppState> store, dynamic action, NextDispatcher next) async {
@@ -26,13 +28,13 @@ class StatusMiddleware extends MiddlewareClass<AppState>{
         response = await client.get(url).timeout(
         Duration(milliseconds: 1750),
         onTimeout: () {
-          client.close();
+          // client.close(); 
           next(action);
           return null;
           },
         );
       } catch (e) {
-        store.dispatch(CarStatusErrorAction());
+        dispatchErrorAndShowMessage(store, 444);
       }
 
       if (response is http.Response && response.statusCode == 200) {
@@ -40,11 +42,16 @@ class StatusMiddleware extends MiddlewareClass<AppState>{
         await Future.delayed(Duration(seconds: 2));
         store.dispatch(FetchCarStatusAction());
       } else {
-        // print('error in response code');
-        store.dispatch(CarStatusErrorAction());
+        dispatchErrorAndShowMessage(store, 555);
       }
     }
 
     next(action);
+  }
+
+  void dispatchErrorAndShowMessage(Store<AppState> store, int code){
+      print(code.toString());
+      store.dispatch(CarStatusErrorAction());
+      store.dispatch(ShowMessage("Check your wifi!" + code.toString()));
   }
 }

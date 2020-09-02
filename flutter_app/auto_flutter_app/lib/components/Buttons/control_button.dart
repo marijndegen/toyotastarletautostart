@@ -15,7 +15,8 @@ class ControlButton extends StatelessWidget{
   Widget build(BuildContext context) {
     return FloatingActionButton(
               onPressed: () {
-                vm.executeButtonFuction();
+                if(vm != null) 
+                  vm.executeButtonFuction();
               },
               backgroundColor: color,
               child: Icon(

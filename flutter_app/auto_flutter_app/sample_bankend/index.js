@@ -1,11 +1,13 @@
 const express = require('express');
 const app = express();
 
-const server = '192.168.1.6';
+const server = '192.168.1.5';
 const port = 80;
 
 let started = false;
 let contact = false;
+
+const delay = ms => new Promise(res => setTimeout(res, ms));
 
 //between 0 and 2 (floating point), the higher the number, the bigger the chance of succes.
 let errorSimulator = 1.4; 
@@ -33,11 +35,10 @@ app.get('/car/start/ignition', function (req, res) {
 	console.log("Simulating an error.");
   }
 	
-  const delay = ms => new Promise(res => setTimeout(res, ms));
   res.send();
 });
 
-app.get('/car/status', function (req, res) {
+app.get('/car/status', async function (req, res) {
   statusText = "";
   if(!contact)
 	  statusText += "The car is off contact";
@@ -48,7 +49,27 @@ app.get('/car/status', function (req, res) {
   else
 	  statusText += " and is running.";
   
-  console.log(statusText);
+  let delayTime;
+  
+  const d = Math.random();
+  if (d < .1)
+	delayTime = 0;
+  else if (d < 0.9)
+	delayTime = 300
+  else 
+	delayTime = 2500
+	  
+  var currentdate = new Date(); 
+  var datetime = currentdate.getDate() + "/"
+                + (currentdate.getMonth()+1)  + "/" 
+                + currentdate.getFullYear() + " @ "  
+                + currentdate.getHours() + ":"  
+                + currentdate.getMinutes() + ":" 
+                + currentdate.getSeconds();
+  
+  console.log(`${datetime} ${statusText} with delay: ${delayTime}`);
+  
+    await delay(delayTime);
 	
   if(!started && !contact){ //this can also be random based on the number.
 	res.send("-2");  

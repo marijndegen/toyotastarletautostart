@@ -15,7 +15,9 @@ class AppState{
 
   final bool listening;
 
-  const AppState({this.selectedStartTime, this.ipAdress, this.carStatus, this.blockUserInput, this.listening});
+  final String error;
+
+  const AppState({this.selectedStartTime, this.ipAdress, this.carStatus, this.blockUserInput, this.listening, this.error,});
 
   static AppState initial() {
     return AppState(
@@ -24,6 +26,7 @@ class AppState{
       carStatus: -100,
       blockUserInput: false,
       listening: false,
+      error: null,
     );
   }
 
@@ -32,7 +35,8 @@ class AppState{
       String ipAdress,
       int carStatus,
       bool blockUserInput,
-      bool listening,}
+      bool listening,
+      String error,}
     ) {
     return AppState(
       selectedStartTime: selectedStartTime ?? this.selectedStartTime,
@@ -40,6 +44,7 @@ class AppState{
       carStatus: carStatus ?? this.carStatus,
       blockUserInput: blockUserInput ?? this.blockUserInput,
       listening: listening ?? this.listening,
+      error: error ?? this.error,
     );
   }
 

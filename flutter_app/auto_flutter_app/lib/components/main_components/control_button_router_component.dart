@@ -1,20 +1,19 @@
 import 'package:auto_flutter_app/actions/status/fetch_car_status_action.dart';
 import 'package:auto_flutter_app/actions/status/start_listening_action.dart';
-import 'package:auto_flutter_app/components/Buttons/disconnected_button_component.dart';
-import 'package:auto_flutter_app/components/Buttons/start_button_component.dart';
-import 'package:auto_flutter_app/components/Buttons/stop_button_component.dart';
+import 'package:auto_flutter_app/components/buttons/disabeld_button_component.dart';
+import 'package:auto_flutter_app/components/buttons/disconnected_button_component.dart';
+import 'package:auto_flutter_app/components/buttons/start_button_component.dart';
+import 'package:auto_flutter_app/components/buttons/stop_button_component.dart';
 
 import 'package:auto_flutter_app/state/app_state.dart';
 import 'package:flutter/material.dart';
 import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
-import 'Buttons/disabeld_button_component.dart';
-
-final Color _disabledColor = Colors.grey;
-final Color _startColor = Colors.green;
-final Color _stopColor = Colors.red;
-final Color _disconnectedColor = Colors.blue;
+// final Color _disabledColor = Colors.grey;
+// final Color _startColor = Colors.green;
+// final Color _stopColor = Colors.red;
+// final Color _disconnectedColor = Colors.blue;
 
 class ControlButtonRouter extends StatelessWidget {
   @override
@@ -22,16 +21,13 @@ class ControlButtonRouter extends StatelessWidget {
 
     return StoreConnector<AppState, _ViewModel>(
           onInit: (store) {
-            print("initial fetch");
-            store.dispatch(StartListeningAction());
-            store.dispatch(FetchCarStatusAction());
+            if(!store.state.listening){
+              store.dispatch(StartListeningAction());
+              store.dispatch(FetchCarStatusAction());
+              print("initial fetch");
+            }
           },
-          //todo these functions are not needed.
-          converter: (Store<AppState> store) => _ViewModel.fromStore(
-            store, 
-            //startListening: () => store.dispatch(StartListeningAction()),
-            //fetchCarStatus: () => store.dispatch(FetchCarStatusAction())
-          ),
+          converter: (Store<AppState> store) => _ViewModel.fromStore(store),
           builder: (BuildContext context, _ViewModel vm) {
                 return  Container(
             margin: EdgeInsets.all(15),
@@ -61,11 +57,6 @@ class _ViewModel {
 
   final bool listening;
 
-  // final void Function() startListening;
-  
-  // final void Function() fetchCarStatus;
-
-
   _ViewModel({this.carStatus, this.blockUserInput, this.listening, /*this.startListening, this.fetchCarStatus*/});
 
   static _ViewModel fromStore(Store<AppState> store, {startListening, fetchCarStatus}) {
@@ -73,8 +64,6 @@ class _ViewModel {
         carStatus: store.state.carStatus,
         blockUserInput: store.state.blockUserInput,
         listening: store.state.listening,
-        // startListening: startListening,
-        // fetchCarStatus: fetchCarStatus
       );
   }
 }

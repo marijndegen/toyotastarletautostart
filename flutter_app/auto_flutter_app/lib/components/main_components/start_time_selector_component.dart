@@ -18,13 +18,8 @@ final List<String> _startTimesOptions = [
 class StartTimeSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    
     return StoreConnector<AppState, _ViewModel>(
-          converter: (Store<AppState> store) => _ViewModel.fromStore(
-            store,  
-            onStartTimeChanged: (startTime) => store.dispatch(SetStartTimeAction(startTime))
-          ),
+          converter: (Store<AppState> store) => _ViewModel.fromStore(store),
           builder: (BuildContext context, _ViewModel vm) {
             return DropdownButton(
             value: vm.selectedStartTime,
@@ -50,7 +45,7 @@ class _ViewModel {
   static _ViewModel fromStore(Store<AppState> store, {onStartTimeChanged}) {
       return _ViewModel(
         selectedStartTime: store.state.selectedStartTime,
-        onStartTimeChanged: onStartTimeChanged,
+        onStartTimeChanged: (startTime) => store.dispatch(SetStartTimeAction(startTime)),
       );
   }
 }

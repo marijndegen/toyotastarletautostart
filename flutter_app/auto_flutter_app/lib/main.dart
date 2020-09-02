@@ -9,17 +9,9 @@ import 'package:auto_flutter_app/middleware/app_middleware.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:auto_flutter_app/ToyotaStartlet.dart';
-// import 'package:auto_flutter_app/starlet_service/car_interface.dart';
 import 'package:flutter/material.dart';
 
-/*
-
- */
-
 void main() {
-
-  // CarInterfaceService cis = new CarInterfaceService();
-
 
   final store = Store<AppState>(
     appReducer,
@@ -28,7 +20,6 @@ void main() {
     );
 
     store.onChange.listen((AppState state) => print('listening: ' + state.listening.toString() + ' status ' + state.carStatus.toString() + ' blockinput ' + state.blockUserInput.toString()));
-
 
     runApp(StoreProvider(store: store, child:
       MaterialApp(

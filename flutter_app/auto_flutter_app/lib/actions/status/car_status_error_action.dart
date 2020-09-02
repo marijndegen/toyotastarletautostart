@@ -1,3 +1,1 @@
-class CarStatusErrorAction{
-  
-}
+class CarStatusErrorAction{}
