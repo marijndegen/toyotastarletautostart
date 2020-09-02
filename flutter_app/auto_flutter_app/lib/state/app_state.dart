@@ -1,6 +1,5 @@
 import 'package:meta/meta.dart';
 
-
 //Put all variables of toyotastarlet in appstate
 @immutable
 class AppState{
@@ -15,9 +14,11 @@ class AppState{
 
   final bool listening;
 
+  final int failedAttempts;
+
   final String error;
 
-  const AppState({this.selectedStartTime, this.ipAdress, this.carStatus, this.blockUserInput, this.listening, this.error,});
+  const AppState({this.selectedStartTime, this.ipAdress, this.carStatus, this.blockUserInput, this.listening, this.failedAttempts, this.error,});
 
   static AppState initial() {
     return AppState(
@@ -26,6 +27,7 @@ class AppState{
       carStatus: -100,
       blockUserInput: false,
       listening: false,
+      failedAttempts: 0,
       error: null,
     );
   }
@@ -36,6 +38,7 @@ class AppState{
       int carStatus,
       bool blockUserInput,
       bool listening,
+      int failedAttempts,
       String error,}
     ) {
     return AppState(
@@ -44,6 +47,7 @@ class AppState{
       carStatus: carStatus ?? this.carStatus,
       blockUserInput: blockUserInput ?? this.blockUserInput,
       listening: listening ?? this.listening,
+      failedAttempts: failedAttempts ?? this.failedAttempts,
       error: error ?? this.error,
     );
   }

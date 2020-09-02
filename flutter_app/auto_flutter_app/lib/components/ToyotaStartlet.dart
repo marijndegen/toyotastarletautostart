@@ -1,5 +1,5 @@
 //Packages
-import 'package:auto_flutter_app/components/error_handler.dart';
+import 'package:auto_flutter_app/components/error_handler/error_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -14,8 +14,8 @@ import 'package:auto_flutter_app/components/main_components/status_text_componen
 import 'package:auto_flutter_app/state/app_state.dart';
 
 //Actions
-import 'actions/block_user_input/block_user_input_action.dart';
-import 'actions/stop_car/stop_car_action.dart';
+import 'package:auto_flutter_app/actions/block_user_input/block_user_input_action.dart';
+import 'package:auto_flutter_app/actions/stop_car/stop_car_action.dart';
 
 //Vars
 // final Color _stopColor = Colors.red;

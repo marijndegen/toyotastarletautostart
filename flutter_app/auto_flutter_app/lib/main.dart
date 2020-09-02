@@ -1,4 +1,5 @@
 // third-party libs
+import 'package:auto_flutter_app/settings/settings.dart';
 import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux_logging/redux_logging.dart';
@@ -8,7 +9,7 @@ import 'package:auto_flutter_app/state/app_state.dart';
 import 'package:auto_flutter_app/middleware/app_middleware.dart';
 import 'package:http/http.dart' as http;
 
-import 'package:auto_flutter_app/ToyotaStartlet.dart';
+import 'package:auto_flutter_app/components/ToyotaStartlet.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -16,7 +17,7 @@ void main() {
   final store = Store<AppState>(
     appReducer,
     initialState: AppState.initial(),
-    middleware: [...createAppMiddleware(http.Client()) , LoggingMiddleware.printer()] //todo hiero
+    middleware: [...createAppMiddleware(http.Client(), Settings.getCorrectSettings()) , LoggingMiddleware.printer()] //todo hiero
     );
 
     store.onChange.listen((AppState state) => print('listening: ' + state.listening.toString() + ' status ' + state.carStatus.toString() + ' blockinput ' + state.blockUserInput.toString()));

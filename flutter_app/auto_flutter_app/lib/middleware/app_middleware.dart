@@ -5,11 +5,11 @@ import 'package:auto_flutter_app/state/app_state.dart';
 
 // final String api = "http://192.168.4.1:80/";
 final String api = "http://192.168.1.5:80/";
-final int retries = 1;
+final int maxRetries = 1;
 
-List<Middleware<AppState>> createAppMiddleware(client) {
+List<Middleware<AppState>> createAppMiddleware(client, settings) {
   return [
-    StatusMiddleware(client, api, retries),
-    ControlMiddleware(client, api)
+    StatusMiddleware(client, settings),
+    ControlMiddleware(client, settings)
   ];
 }

@@ -2,6 +2,7 @@ import 'package:auto_flutter_app/actions/notifications/show_message.dart';
 import 'package:auto_flutter_app/actions/status/car_status_action.dart';
 import 'package:auto_flutter_app/actions/status/car_status_error_action.dart';
 import 'package:auto_flutter_app/actions/status/fetch_car_status_action.dart';
+import 'package:auto_flutter_app/settings/settings.dart';
 import 'package:auto_flutter_app/state/app_state.dart';
 
 import 'package:redux/redux.dart';
@@ -12,16 +13,14 @@ class StatusMiddleware extends MiddlewareClass<AppState>{
 
   final http.Client client;
 
-  final String api;
+  final Settings s;
 
-  final int retries;
-
-  StatusMiddleware(this.client, this.api, this.retries);
+  StatusMiddleware(this.client, this.s);
 
   @override
   void call(Store<AppState> store, dynamic action, NextDispatcher next) async {
     if(action is FetchCarStatusAction && store.state.listening){
-      String url = api + "car/status";
+      String url = s.api + "car/status";
       
       var response;
       try{

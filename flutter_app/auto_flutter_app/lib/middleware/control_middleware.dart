@@ -1,6 +1,7 @@
 import 'package:auto_flutter_app/actions/block_user_input/block_user_input_action.dart';
 import 'package:auto_flutter_app/actions/start_car/start_car_action.dart';
 import 'package:auto_flutter_app/actions/stop_car/stop_car_action.dart';
+import 'package:auto_flutter_app/settings/settings.dart';
 import 'package:auto_flutter_app/state/app_state.dart';
 
 import 'package:redux/redux.dart';
@@ -12,17 +13,17 @@ class ControlMiddleware extends MiddlewareClass<AppState>{
 
   final http.Client client;
 
-  final String api;
+  final Settings s;
 
-  ControlMiddleware(this.client, this.api);
+  ControlMiddleware(this.client, this.s);
 
   @override
   void call(Store<AppState> store, dynamic action, NextDispatcher next) async {
 
     if(action is StartCarAction){
-      String contactUrl = api + "car/start/contact";
+      String contactUrl = s.api + "car/start/contact";
 
-      String startUrl = api + 'car/start/ignition?ignitionTime=' + store.state.selectedStartTime;
+      String startUrl = s.api + 'car/start/ignition?ignitionTime=' + store.state.selectedStartTime;
 
       //if the car is not on contact, put the car on contact
       if(store.state.carStatus == -2){
@@ -51,7 +52,7 @@ class ControlMiddleware extends MiddlewareClass<AppState>{
     }
 
     if(action is StopCarAction){
-      String stopUrl = api + "car/stop/contact";
+      String stopUrl = s.api + "car/stop/contact";
 
       await client.get(stopUrl).timeout(
         Duration(milliseconds: 1750),

@@ -3,7 +3,7 @@ import 'package:redux/redux.dart';
 import 'package:auto_flutter_app/state/app_state.dart';
 import 'package:auto_flutter_app/actions/.actions.dart';
 
-final errorReducer = combineReducers<AppState>([
+final notificationReducer = combineReducers<AppState>([
   TypedReducer<AppState, ShowMessage>(_throwErrorAction),
   TypedReducer<AppState, ClearMessageState>(_resolveErrorAction),
 ]);
