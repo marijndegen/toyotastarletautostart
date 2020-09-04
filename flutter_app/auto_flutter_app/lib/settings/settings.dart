@@ -18,8 +18,8 @@ class Settings {
       maxRetries: 1,
     );
 
-  //One of the following should apply
-  static Settings getCorrectSettings() => 
-    _devSettings();
-  // productionSettings();
+  /// One of the following should apply
+  static Settings getCorrectSettings() =>
+  _productionSettings();
+//    _devSettings();
 }
