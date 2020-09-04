@@ -16,7 +16,7 @@ class AppState{
 
   final int failedAttempts;
 
-  final String error;
+  final Exception error;
 
   const AppState({this.selectedStartTime, this.ipAdress, this.carStatus, this.blockUserInput, this.listening, this.failedAttempts, this.error,});
 
@@ -39,7 +39,7 @@ class AppState{
       bool blockUserInput,
       bool listening,
       int failedAttempts,
-      String error,}
+      Exception error,}
     ) {
     return AppState(
       selectedStartTime: selectedStartTime ?? this.selectedStartTime,

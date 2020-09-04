@@ -8,7 +8,7 @@ class Settings {
 
   static Settings _devSettings() =>
     Settings(
-      api: "http://192.168.1.5:80/", 
+      api: "http://192.168.178.122:80/",
       maxRetries: 1,
     );
   

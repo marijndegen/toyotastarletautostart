@@ -19,7 +19,6 @@ class ErrorHandler extends StatelessWidget {
                   builder: (BuildContext context, _ViewModel vm) => child,
                   onWillChange: (vm) {
                     if (vm.error != null) {
-                      print("resolve!!");
                       vm.resolveError();
                       Scaffold.of(context).showSnackBar(
                         SnackBar(
@@ -32,7 +31,7 @@ class ErrorHandler extends StatelessWidget {
                               Scaffold.of(context).hideCurrentSnackBar();
                             }
                         ),
-                  
+
                       ));
                     }
                   },
@@ -44,7 +43,7 @@ class ErrorHandler extends StatelessWidget {
 
 class _ViewModel {
 
-  final String error;
+  final Exception error;
 
   final Function resolveError;
 
@@ -58,9 +57,10 @@ class _ViewModel {
   }
 
   @override
-  int get hashCode => error.hashCode;
+  int get hashCode => error.hashCode  ;
 
   @override
-  bool operator ==(other) =>
-      identical(this, other) || other is _ViewModel && other.error == this.error;
+  bool operator ==(other) {
+    return identical(this, other) || (other is _ViewModel && other.error == this.error);
+  }
 }

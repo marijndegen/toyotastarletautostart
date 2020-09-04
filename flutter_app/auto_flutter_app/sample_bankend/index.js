@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 
-const server = '192.168.1.5';
+const server = '192.168.178.122';
 const port = 80;
 
 let started = false;
@@ -38,6 +38,8 @@ app.get('/car/start/ignition', function (req, res) {
   res.send();
 });
 
+let counter = 0;
+
 app.get('/car/status', async function (req, res) {
   statusText = "";
   if(!contact)
@@ -52,12 +54,13 @@ app.get('/car/status', async function (req, res) {
   let delayTime;
   
   const d = Math.random();
-  if (d < .1)
-	delayTime = 0;
-  else if (d < 0.9)
+  if (d < .2)
+	delayTime = 0
+  else if (d < .7)
 	delayTime = 300
   else 
 	delayTime = 2500
+
 	  
   var currentdate = new Date(); 
   var datetime = currentdate.getDate() + "/"

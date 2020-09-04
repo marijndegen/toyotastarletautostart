@@ -10,7 +10,6 @@ export 'block_user_input/block_user_input_action.dart';
 
 //error actions
 export 'notifications/clear_message_state.dart';
-export 'notifications/show_message.dart';
 
 export 'status/car_status_action.dart';
 export 'status/car_status_error_action.dart';

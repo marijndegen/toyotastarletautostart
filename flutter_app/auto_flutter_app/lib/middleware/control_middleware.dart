@@ -25,12 +25,11 @@ class ControlMiddleware extends MiddlewareClass<AppState>{
 
       String startUrl = s.api + 'car/start/ignition?ignitionTime=' + store.state.selectedStartTime;
 
-      //if the car is not on contact, put the car on contact
+      /// if the car is not on contact, put the car on contact
       if(store.state.carStatus == -2){
         await client.get(contactUrl).timeout(
           Duration(milliseconds: 1750),
           onTimeout: () {
-            client.close();
             next(action);
             return null;
         });
@@ -38,10 +37,10 @@ class ControlMiddleware extends MiddlewareClass<AppState>{
         await Future.delayed(Duration(milliseconds: 400));
       }
 
+      /// Actually ignite the start engine
       await client.get(startUrl).timeout(
         Duration(milliseconds: 1750),
         onTimeout: () {
-          client.close();
           next(action);
           return null;
       });
@@ -57,7 +56,6 @@ class ControlMiddleware extends MiddlewareClass<AppState>{
       await client.get(stopUrl).timeout(
         Duration(milliseconds: 1750),
         onTimeout: () {
-          client.close();
           next(action);
           return null;
       });
